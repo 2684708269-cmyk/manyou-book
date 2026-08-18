@@ -3,16 +3,8 @@
 
   const DATA_URL = "https://cdn.jsdelivr.net/gh/nvkelso/natural-earth-vector@master/geojson/ne_50m_admin_1_states_provinces_lakes.geojson";
   const HIGH_RES_DATA_URL = "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_10m_admin_1_states_provinces.geojson";
-  const STORE_KEY = "wanderbook-regions-v1";
-  const seed = {
-    "China|Yunnan": { status: "visited", note: "风吹过洱海的时候，我们已经在计划下一站。", photos: [] },
-    "China|Zhejiang": { status: "visited", note: "江南的雨很轻。", photos: [] },
-    "Japan|Tokyo": { status: "visited", note: "夜晚的街巷和清晨的电车。", photos: [] },
-    "France|Île-de-France": { status: "planned", note: "等一个秋天。", photos: [] },
-    "United States of America|California": { status: "planned", note: "沿一号公路一直向南。", photos: [] },
-    "Australia|New South Wales": { status: "planned", note: "去看南半球的海。", photos: [] },
-    "Iceland|Capital Region": { status: "planned", note: "极光愿望。", photos: [] }
-  };
+  const STORE_KEY = "wanderbook-regions-v2";
+  const seed = {};
 
   let records = loadRecords();
   let geoData = null;
@@ -162,7 +154,7 @@
     const all = Object.values(records);
     $("#visitedCount").textContent = all.filter((r) => r.status === "visited").length;
     $("#plannedCount").textContent = all.filter((r) => r.status === "planned").length;
-    $("#photoCount").textContent = Math.max(8, all.reduce((sum, r) => sum + (r.photos?.length || 0), 0));
+    $("#photoCount").textContent = all.reduce((sum, r) => sum + (r.photos?.length || 0), 0);
   }
 
   function renderPreviews() {

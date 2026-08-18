@@ -68,12 +68,11 @@ h1 em { color: var(--orange); font-style: italic; }
 .memory-card { margin-top: auto; padding-top: 34px; max-width: 350px; }
 .memory-topline { display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 600; margin-bottom: 10px; }
 .memory-topline button { border: 0; background: none; cursor: pointer; color: var(--muted); font-size: 10px; }
-.memory-photo { height: 145px; position: relative; border-radius: 4px; overflow: hidden; background: linear-gradient(150deg, rgba(31,60,51,.1), rgba(230,126,94,.25)), url("https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=800&q=80") center/cover; box-shadow: 0 12px 30px rgba(42,57,50,.14); transform: rotate(-.8deg); }
-.memory-photo:after { content: ""; position: absolute; inset: 0; background: linear-gradient(transparent 50%, rgba(15,38,31,.6)); }
-.photo-caption { position: absolute; z-index: 1; left: 17px; bottom: 14px; color: white; display: flex; flex-direction: column; }
-.photo-caption small { letter-spacing: .13em; font-size: 8px; opacity: .8; }
+.memory-empty { height: 145px; border: 1px dashed rgba(33,59,53,.25); border-radius: 8px; background: rgba(255,255,255,.25); display: grid; place-items: center; align-content: center; gap: 5px; color: var(--muted); }
+.memory-empty > span { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; color: var(--orange); background: rgba(230,126,94,.1); font-size: 20px; }
+.memory-empty strong { color: var(--ink); font-size: 11px; }
+.memory-empty small { font-size: 9px; }
 .memory-card > p { color: var(--muted); font-size: 11px; line-height: 1.7; display: flex; gap: 8px; }
-.mini-avatar { width: 22px; height: 22px; flex: 0 0 auto; border-radius: 50%; display: grid; place-items: center; color: white; background: var(--orange); font-size: 9px; }
 
 .map-card { position: relative; min-height: 680px; max-height: 830px; border-radius: 34px; overflow: hidden; box-shadow: var(--shadow); background: #a8b8ad; border: 8px solid rgba(255,255,255,.32); }
 #map { position: absolute; inset: 0; background: radial-gradient(circle at center, #b9c9bd 0 35%, #80998d 68%, #31554d 100%); }
