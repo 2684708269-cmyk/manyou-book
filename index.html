@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f4f0e7" />
+    <meta name="description" content="和朋友一起点亮世界的旅行地图" />
+    <title>漫游簿 · 点亮我们的世界</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="noise" aria-hidden="true"></div>
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="漫游簿首页">
+        <span class="brand-mark">漫</span>
+        <span>漫游簿</span>
+      </a>
+      <div class="top-actions">
+        <button class="icon-button" id="searchButton" aria-label="搜索地区" title="搜索地区">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4 4"></path></svg>
+        </button>
+        <button class="avatar-button" id="inviteButton" aria-label="邀请朋友">
+          <span>+ 邀请朋友</span><span class="avatar-stack"><i>Y</i><i>L</i></span>
+        </button>
+      </div>
+    </header>
+
+    <main class="app-shell">
+      <aside class="story-panel">
+        <div class="eyebrow"><span class="eyebrow-line"></span> OUR SHARED WORLD</div>
+        <h1>一起走过的<br /><em>世界地图</em></h1>
+        <p class="intro">把想去的地方留成约定，把抵达过的风景收进共同相册。</p>
+
+        <div class="stats-row" aria-label="旅行统计">
+          <div><strong id="visitedCount">3</strong><span>去过</span></div>
+          <div><strong id="plannedCount">4</strong><span>想去</span></div>
+          <div><strong id="photoCount">8</strong><span>照片</span></div>
+        </div>
+
+        <div class="filter-group" role="group" aria-label="地图筛选">
+          <button class="filter-pill active" data-filter="all"><i class="dot all"></i>全部</button>
+          <button class="filter-pill" data-filter="visited"><i class="dot visited"></i>去过</button>
+          <button class="filter-pill" data-filter="planned"><i class="dot planned"></i>想去</button>
+        </div>
+
+        <div class="memory-card">
+          <div class="memory-topline"><span>最近点亮</span><button id="openGallery">查看相册 →</button></div>
+          <div class="memory-photo" role="img" aria-label="山间旅行照片">
+            <div class="photo-caption"><small>JUL 24, 2025</small><strong>云南 · 大理</strong></div>
+          </div>
+          <p><span class="mini-avatar">Y</span> “风吹过洱海的时候，我们已经在计划下一站。”</p>
+        </div>
+      </aside>
+
+      <section class="map-card" aria-label="世界旅行地图">
+        <div id="map" aria-label="可缩放的世界行政区地图"></div>
+        <div class="map-wash" aria-hidden="true"></div>
+        <div class="map-top">
+          <div class="map-status"><span class="pulse"></span><span id="mapStatus">正在加载省州边界…</span></div>
+          <button class="map-chip" id="resetView">◎ 世界视图</button>
+        </div>
+        <div class="search-popover" id="searchPopover" hidden>
+          <label for="regionSearch">寻找一个地方</label>
+          <div class="search-input-wrap">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4 4"></path></svg>
+            <input id="regionSearch" type="search" placeholder="输入省、州或自治区" autocomplete="off" />
+          </div>
+          <div id="searchResults" class="search-results"></div>
+        </div>
+        <div class="map-hint" id="mapHint"><span>↕</span> 滚轮缩放 · 拖动旋转地球 · 点击区域点亮</div>
+        <div class="map-legend">
+          <span><i class="dot visited"></i>去过</span>
+          <span><i class="dot planned"></i>想去</span>
+          <span><i class="dot friend"></i>朋友点亮</span>
+        </div>
+      </section>
+    </main>
+
+    <div class="modal-backdrop" id="regionModal" hidden>
+      <section class="modal region-modal" role="dialog" aria-modal="true" aria-labelledby="regionTitle">
+        <button class="modal-close" data-close="regionModal" aria-label="关闭">×</button>
+        <span class="modal-kicker">点亮一块新的拼图</span>
+        <h2 id="regionTitle">云南</h2>
+        <p id="regionCountry">中国</p>
+        <div class="status-choice" role="group" aria-label="旅行状态">
+          <button data-status="planned"><span>✦</span><strong>想去</strong><small>加入愿望清单</small></button>
+          <button data-status="visited"><span>✓</span><strong>去过</strong><small>保存旅行记忆</small></button>
+        </div>
+        <label class="note-label">留下一句话
+          <textarea id="regionNote" maxlength="120" placeholder="关于这里的记忆或期待…"></textarea>
+        </label>
+        <label class="upload-zone" for="photoUpload">
+          <input id="photoUpload" type="file" accept="image/*" multiple />
+          <span class="upload-icon">＋</span>
+          <strong>添加旅途照片</strong>
+          <small>点击选择，最多 4 张（保存在本机）</small>
+        </label>
+        <div class="preview-grid" id="previewGrid"></div>
+        <button class="primary-button" id="saveRegion">保存到我们的地图</button>
+        <button class="text-button danger" id="clearRegion">清除这个地区的标记</button>
+      </section>
+    </div>
+
+    <div class="modal-backdrop" id="inviteModal" hidden>
+      <section class="modal invite-modal" role="dialog" aria-modal="true" aria-labelledby="inviteTitle">
+        <button class="modal-close" data-close="inviteModal" aria-label="关闭">×</button>
+        <div class="postcard-stamp">AIR<br />MAIL</div>
+        <span class="modal-kicker">TRAVEL TOGETHER</span>
+        <h2 id="inviteTitle">把世界地图<br />分享给朋友</h2>
+        <p>朋友输入邀请码后，就能和你一起标记想去与去过的地方。</p>
+        <div class="invite-code" id="inviteCode">WANDER-1913</div>
+        <button class="primary-button" id="copyInvite">复制邀请码</button>
+        <div class="divider"><span>或者加入朋友的地图</span></div>
+        <div class="join-row">
+          <input id="joinCode" placeholder="输入邀请码" maxlength="16" />
+          <button id="joinButton">加入</button>
+        </div>
+        <p class="form-message" id="inviteMessage"></p>
+      </section>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
