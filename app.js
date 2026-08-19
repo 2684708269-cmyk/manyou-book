@@ -470,18 +470,67 @@
   }));
 
   await initializeBackend();
-window.addEventListener('DOMContentLoaded', function() {
-    const journalTextarea = document.getElementById('journal');
-    const savedContent = localStorage.getItem('journalContent');
-    
-    if (savedContent) {
-        journalTextarea.value = savedContent;
-    }
-});
+function registerJournalHandlers() {
+  const textarea = document.getElementById('journal');
+  const saveBtn = document.getElementById('save');
+  if (!textarea || !saveBtn) return;
 
-document.getElementById('save').addEventListener('click', function() {
-    const journalContent = document.getElementById('journal').value;
-    localStorage.setItem('journalContent', journalContent);
-    alert('已保存!'); // "Saved!"
+  async function loadJournal() {
+    if (backendReady && currentUser) {
+      try {
+        const { data, error } = await db.from('journals').select('content, updated_at').eq('user_id', currentUser.id).single();
+        if (!error && data?.content != null) {
+          textarea.value = data.content;
+          localStorage.setItem('journalContent', data.content);
+          return;
+        }
+      } catch (e) {
+      }
+    }
+
+    const saved = localStorage.getItem('journalContent');
+    if (saved) textarea.value = saved;
+  }
+
+  async function saveJournal() {
+    const content = textarea.value;
+    try {
+      localStorage.setItem('journalContent', content);
+
+      if (backendReady && currentUser) {
+        // Use upsert with a unique constraint on user_id (see SQL below)
+        const payload = { user_id: currentUser.id, content, updated_at: new Date().toISOString() };
+        const { error } = await db.from('journals').upsert(payload, { onConflict: 'user_id' });
+        if (error) {
+          showToast('云端保存失败，已保存在本地');
+          return;
+        }
+        showToast('已保存到云端');
+        return;
+      }
+
+      showToast('已保存在本地');
+    } catch (err) {
+      console.error(err);
+      showToast('保存失败，请稍后重试');
+    }
+  }
+
+  saveBtn.addEventListener('click', (e) => { e.preventDefault(); saveJournal(); });
+
+  let autosaveTimer;
+  textarea.addEventListener('input', () => {
+    clearTimeout(autosaveTimer);
+    autosaveTimer = setTimeout(saveJournal, 1500);
+  });
+
+  loadJournal().catch((e) => console.error('loadJournal error', e));
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', registerJournalHandlers);
+} else {
+  registerJournalHandlers();
+}
 });
 })();
