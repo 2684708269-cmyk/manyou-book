@@ -470,4 +470,18 @@
   }));
 
   await initializeBackend();
+window.addEventListener('DOMContentLoaded', function() {
+    const journalTextarea = document.getElementById('journal');
+    const savedContent = localStorage.getItem('journalContent');
+    
+    if (savedContent) {
+        journalTextarea.value = savedContent;
+    }
+});
+
+document.getElementById('save').addEventListener('click', function() {
+    const journalContent = document.getElementById('journal').value;
+    localStorage.setItem('journalContent', journalContent);
+    alert('已保存!'); // "Saved!"
+});
 })();
