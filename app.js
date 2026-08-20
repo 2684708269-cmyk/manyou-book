@@ -472,6 +472,19 @@
   await initializeBackend();
 function registerJournalHandlers() {
   const textarea = document.getElementById('journal');
+ 
+function autosize() {
+  if (!textarea) return;
+
+  textarea.style.height = 'auto';
+ 
+  textarea.style.height = (textarea.scrollHeight + 2) + 'px';
+}
+
+
+textarea.addEventListener('input', autosize, { passive: true });
+
+autosize();
   const saveBtn = document.getElementById('save');
   if (!textarea || !saveBtn) return;
 
