@@ -197,7 +197,7 @@ textarea { width: 100%; height: 72px; resize: none; margin-top: 8px; color: var(
 }
 @media (prefers-reduced-motion: reduce) { *, *:before, *:after { scroll-behavior: auto !important; transition-duration: .01ms !important; } }
 
-/* --- Button & Textbox styles
+/* --- Button & Textbox styles*/
 
 button#save,
 button.save {
@@ -211,7 +211,7 @@ button.save {
   letter-spacing: .06em;
   border-radius: 12px;
   border: 0;
-  color: #090c11; /* dark text to contrast with ink background */
+  color: #090c11;
   background: linear-gradient(180deg, var(--ink) 0%, rgba(169,138,85,0.95) 110%);
   box-shadow: 0 10px 30px rgba(0,0,0,0.45), 0 1px 0 rgba(255,255,255,0.02) inset;
   cursor: pointer;
